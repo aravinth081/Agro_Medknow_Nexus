@@ -57,31 +57,30 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Spring Onion', price: 25, unit: 'bunch', image: 'spring_onion.jpg' },
         { name: 'Coconut', price: 30, unit: 'piece', image: 'coconut.jpg' }
     ];
-
     const knowledgeArticles = [
         {
             title: 'Modern Crop Rotation',
             icon: 'fa-leaf text-success',
             summary: 'Learn how rotating crops can improve soil health, reduce pests, and increase yield.',
-            content: `<h4>Why Rotate Crops?</h4><p>Crop rotation is the practice of planting different crops sequentially on the same plot of land to improve soil health, optimize nutrients in the soil, and combat pest and weed pressure.</p><h5>Key Benefits:</h5><ul><li><strong>Improved Soil Structure:</strong> Different crops have different root structures, which helps to improve soil aeration and water infiltration.</li><li><strong>Pest and Disease Control:</strong> Many pests and diseases are crop-specific. Rotating crops breaks their life cycle.</li><li><strong>Nutrient Management:</strong> Legumes like beans fix nitrogen in the soil, making it available for the next crop.</li></ul>`
+            content: `<h4>Why Rotate Crops?</h4><p>Crop rotation improves soil health, optimizes nutrients, and combats pests.</p><h5>Key Benefits:</h5><ul><li>Improved Soil Structure</li><li>Pest and Disease Control</li><li>Nutrient Management</li></ul>`
         },
         {
             title: 'Recognizing Dehydration',
             icon: 'fa-hand-holding-medical text-danger',
-            summary: 'This guide helps you recognize the signs of dehydration and provides prevention steps.',
-            content: `<h4>Early Warning Signs of Dehydration:</h4><p>It's crucial to recognize the early symptoms before they become severe, especially when working outdoors in the heat.</p><ul><li>Feeling thirsty or having a dry mouth.</li><li>Urinating less frequently.</li><li>Dark-colored urine.</li><li>Feeling tired or dizzy.</li><li>Headache.</li></ul><h5>What to do:</h5><p>If you experience these symptoms, stop working, move to a cool area, and slowly drink water. Seek medical attention if symptoms worsen.</p>`
+            summary: 'A guide to recognize the signs of dehydration and prevention steps.',
+            content: `<h4>Early Warning Signs:</h4><ul><li>Thirst and dry mouth</li><li>Dark-colored urine</li><li>Fatigue or dizziness</li></ul><h5>What to do:</h5><p>Move to a cool area and slowly drink water. Seek medical attention if symptoms worsen.</p>`
         },
         {
             title: 'Applying for Government Schemes',
             icon: 'fa-landmark text-info',
             summary: 'A simple guide to understanding and applying for agricultural government schemes.',
-            content: `<h4>Finding the Right Scheme</h4><p>Government schemes are designed to support farmers with financial aid, subsidies, and technical assistance. The first step is to identify which schemes you are eligible for.</p><h5>Common Steps to Apply:</h5><ol><li>Visit the official agricultural portal of your state or central government.</li><li>Find the 'Schemes' or 'Farmer Welfare' section.</li><li>Read the eligibility criteria carefully for each scheme (e.g., land ownership, crop type).</li><li>Prepare necessary documents, which often include identity proof, land records, and a bank account details.</li><li>Fill out the online application form and upload the required documents.</li></ol><p>Always check for deadlines and keep a copy of your application for future reference.</p>`
+            content: `<h4>Finding the Right Scheme</h4><p>Government schemes support farmers with financial aid and subsidies.</p><h5>Application Steps:</h5><ol><li>Visit the official agricultural portal.</li><li>Find the 'Schemes' section.</li><li>Read the eligibility criteria.</li><li>Prepare documents (ID, land records).</li><li>Fill out the online form.</li></ol>`
         },
         {
             title: 'Financial Literacy for Farmers',
             icon: 'fa-rupee-sign text-warning',
-            summary: 'Learn the basics of banking, loans, and digital payments to manage your finances effectively.',
-            content: `<h4>Why is Financial Literacy Important?</h4><p>Understanding basic financial concepts can empower you to make better decisions, access credit, and protect your earnings.</p><h5>Key Areas to Focus On:</h5><ul><li><strong>Banking:</strong> Opening a bank account provides a safe place for your money and is often required for government schemes.</li><li><strong>Understanding Loans:</strong> Learn about different types of agricultural loans (e.g., Kisan Credit Card), interest rates, and repayment schedules before borrowing.</li><li><strong>Digital Payments (UPI):</strong> Using UPI apps on your smartphone allows for instant, secure transactions without needing to carry cash, which is useful for buying supplies or receiving payments.</li></ul>`
+            summary: 'Learn the basics of banking, loans, and digital payments.',
+            content: `<h4>Why is it Important?</h4><p>Understanding finances helps you make better decisions and access credit.</p><h5>Key Areas:</h5><ul><li><strong>Banking:</strong> Secure your money and access schemes.</li><li><strong>Loans:</strong> Understand interest rates and repayment.</li><li><strong>Digital Payments:</strong> Use UPI for instant, secure transactions.</li></ul>`
         }
     ];
 
@@ -250,11 +249,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Health Data Form Logic ---
     const healthForm = document.getElementById('health-form');
+    const qrCodeDisplay = document.getElementById('qr-code-display');
+    const qrCodeImage = document.getElementById('qr-code-image');
+
     if (healthForm) {
-        healthForm.addEventListener('submit', (e) => {
+        healthForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Health data saved securely! (This is a demo)');
-            healthForm.reset();
+            const submitButton = healthForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Generating...`;
+
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                bloodType: document.getElementById('bloodType').value,
+                allergies: document.getElementById('allergies').value,
+                medications: document.getElementById('medications').value
+            };
+
+            try {
+                const response = await fetch('/api/generate-qr', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                if (!response.ok) throw new Error('Failed to generate QR code');
+                const data = await response.json();
+                qrCodeImage.src = data.qr_code_url;
+                qrCodeDisplay.classList.remove('d-none');
+                healthForm.classList.add('d-none');
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Save & Generate QR Code';
+            }
         });
     }
 });
