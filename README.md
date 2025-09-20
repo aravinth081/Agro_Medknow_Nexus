@@ -1,4 +1,4 @@
-## Agro Medknow Nexus 🌱❤️
+## Agro Medknow Nexux 🌱❤️
 
 Agro Medknow Nexus is a full-stack web application designed to bridge the knowledge and resource gap for rural communities. It combines essential first-aid guidance, an agricultural e-marketplace, a multi-lingual knowledge platform, and a secure health data locker into a single, accessible portal.
 
