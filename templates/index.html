@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agro Medknow Nexus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" data-section="home"><i class="fas fa-heart-pulse me-2"></i><i class="fas fa-seedling me-2"></i>Agro Medknow Nexus</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" data-section="home">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-section="first-aid">🧰 First Aid</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-section="agro-market">🛒 E-Market</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-section="knowledge">🌍 Knowledge</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-section="health-data">📊 Health Locker</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Section 1: Home -->
+        <section id="home-section" class="app-section">
+            <div class="hero-section">
+                <div class="container text-center">
+                    <h1 class="display-4 fw-bold">🌱 Agro Medknow Nexus</h1>
+                    <p class="lead">Empowering Rural Communities with Health and Agricultural Solutions.</p>
+                    <button class="btn btn-light btn-lg mt-3" id="getStartedBtn">Explore Modules</button>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <!-- script.js will generate the four main feature cards here -->
+                <div class="row g-4" id="module-grid"></div>
+            </div>
+        </section>
+
+        <!-- Section 2: First Aid -->
+        <section id="first-aid-section" class="container app-section d-none">
+            <h2 class="text-center my-4">🧰 Intelligent First Aid Companion</h2>
+            <div class="demo-container">
+                <h4><i class="fas fa-robot me-2"></i>Emergency Assistance</h4>
+                <p>Describe your emergency below. Our AI will provide step-by-step guidance.</p>
+                <div class="chat-container" id="chat-container">
+                    <div class="message system-message">Hello! How can I help you? Please describe the emergency.</div>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="emergency-input" class="form-control" placeholder="e.g., A person is choking...">
+                    <button class="btn btn-primary" id="send-emergency-btn">Send <i class="fas fa-paper-plane ms-1"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Agro E-Market -->
+        <section id="agro-market-section" class="container app-section d-none">
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <h2 class="text-center mb-0">🛒 Agro E-Market</h2>
+                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#cartModal">View Cart <span class="badge bg-light text-dark ms-1" id="cart-count">0</span></button>
+            </div>
+            <!-- script.js will generate the product cards here -->
+            <div class="row" id="product-grid"></div>
+        </section>
+        
+        <!-- Section 4: Knowledge Platform -->
+        <section id="knowledge-section" class="container app-section d-none">
+             <h2 class="text-center my-4">🌍 Inclusive Knowledge Platform</h2>
+             <!-- script.js will generate the article cards here -->
+             <div class="row" id="knowledge-grid"></div>
+        </section>
+
+        <!-- Section 5: Health Data Locker -->
+        <section id="health-data-section" class="container app-section d-none">
+            <h2 class="text-center my-4">📊 Critical Health Data Locker</h2>
+            <div class="health-data-form">
+                <h4><i class="fas fa-file-medical me-2"></i>Your Health Profile</h4>
+                <p>Store your critical health information securely.</p>
+                <form id="health-form">
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label for="fullName" class="form-label">Full Name</label><input type="text" class="form-control" id="fullName" required></div>
+                        <div class="col-md-6 mb-3"><label for="bloodType" class="form-label">Blood Type</label><select id="bloodType" class="form-select" required><option selected disabled value="">Choose...</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
+                    </div>
+                    <div class="mb-3"><label for="allergies" class="form-label">Known Allergies</label><textarea class="form-control" id="allergies" rows="2"></textarea></div>
+                    <div class="mb-3"><label for="medications" class="form-label">Current Medications</label><textarea class="form-control" id="medications" rows="2"></textarea></div>
+                    <button type="submit" class="btn btn-primary w-100">Save Securely</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Hidden Modal for Knowledge Articles -->
+        <div class="modal fade" id="knowledgeModal" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="knowledgeModalLabel">Article</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="knowledgeModalBody"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center">
+        <div class="container"><p>&copy; 2025 Agro Medknow Nexus. All Rights Reserved.</p></div>
+    </footer>
+
+    <!-- Floating Emergency Button -->
+    <button class="btn emergency-btn" title="Emergency First Aid" data-section="first-aid">
+        <i class="fas fa-first-aid fa-lg text-white"></i>
+    </button>
+    
+    <!-- Hidden Modal for Shopping Cart -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Your Shopping Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="cart-items"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="checkout-btn">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Links -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>const STATIC_URL_BASE = "{{ url_for('static', filename='') }}";</script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
